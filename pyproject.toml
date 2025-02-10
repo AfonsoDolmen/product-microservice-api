@@ -3,7 +3,7 @@ name = "product-microservice-api"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Afonso Dolmen"}
+    {name = "Afonso Dolmen",email = "afonsodolmensilva@outlook.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.12"
@@ -13,11 +13,13 @@ dependencies = [
     "sqlalchemy (>=2.0.38,<3.0.0)",
     "psycopg2-binary (>=2.9.10,<3.0.0)",
     "pytest (>=8.3.4,<9.0.0)",
-    "alembic (>=1.14.1,<2.0.0)",
-    "python-decouple (>=3.8,<4.0)"
+    "alembic (>=1.14.1,<2.0.0)"
 ]
 
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode = false
