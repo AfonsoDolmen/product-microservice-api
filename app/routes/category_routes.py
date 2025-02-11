@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response, status
+from fastapi import APIRouter, status
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from app.schemas.category import Category
@@ -20,3 +20,12 @@ def add_category(
     uc.add_category(category)
 
     return category
+
+
+@router.get('/list', status_code=status.HTTP_200_OK)
+def list_categories(
+    db_session: Session = Depends(get_db_session)
+):
+    uc = CategoryUseCases(db_session)
+
+    return uc.list_categories()

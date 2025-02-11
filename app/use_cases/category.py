@@ -16,11 +16,11 @@ class CategoryUseCases:
         self.db_session.add(category_model)
         self.db_session.commit()
 
-    def list_categories(self, db_session: Session):
+    def list_categories(self):
         """
         Lista todos os registros do banco
         """
-        categories_on_db = db_session.query(CategoryModel).all()
+        categories_on_db = self.db_session.query(CategoryModel).all()
         categories_output = [self.serialize_category(
             category_model) for category_model in categories_on_db]
 
