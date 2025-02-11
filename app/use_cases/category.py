@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.db.models import Category as CategoryModel
-from app.schemas.category import Category
+from app.schemas.category import Category, CategoryOutput
 
 
 class CategoryUseCases:
@@ -15,3 +15,19 @@ class CategoryUseCases:
 
         self.db_session.add(category_model)
         self.db_session.commit()
+
+    def list_categories(self, db_session: Session):
+        """
+        Lista todos os registros do banco
+        """
+        categories_on_db = db_session.query(CategoryModel).all()
+        categories_output = [self.serialize_category(
+            category_model) for category_model in categories_on_db]
+
+        return categories_output
+
+    def serialize_category(self, category_model: CategoryModel):
+        """
+        Serializa a saída para o usuário
+        """
+        return CategoryOutput(**category_model.__dict__)
