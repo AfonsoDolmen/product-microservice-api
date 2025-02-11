@@ -1,7 +1,9 @@
 from fastapi import FastAPI
+from app.routes.category_routes import router as categories_routes
 
 
 app = FastAPI()
+app.include_router(categories_routes)
 
 
 @app.get('/health-check')
