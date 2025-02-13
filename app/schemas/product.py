@@ -1,5 +1,6 @@
 import re
 from pydantic import validator
+from typing import Dict
 from app.schemas.base import CustomBaseModel
 
 
@@ -25,3 +26,8 @@ class Product(CustomBaseModel):
             raise ValueError('Invalid price')
 
         return value
+
+
+class ProductInput(CustomBaseModel):
+    category_slug: str
+    product: Product
