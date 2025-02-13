@@ -36,7 +36,7 @@ def test_list_categories(db_session: Session, categories_on_db: List[Category]):
     """
     uc = CategoryUseCases(db_session)
 
-    categories = uc.list_categories(db_session)
+    categories = uc.list_categories()
 
     assert len(categories) == 4
     assert type(categories[0]) == CategoryOutput
