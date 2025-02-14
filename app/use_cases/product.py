@@ -38,3 +38,14 @@ class ProductUseCases:
 
         self.db_session.add(product_on_db)
         self.db_session.commit()
+
+    def delete_product(self, id: int):
+        product_on_db = self.db_session.query(
+            ProductModel).filter_by(id=id).first()
+
+        if product_on_db is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail='Product not found')
+
+        self.db_session.delete(product_on_db)
+        self.db_session.commit()
