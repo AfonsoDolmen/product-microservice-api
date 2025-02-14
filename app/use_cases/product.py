@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from app.db.models import Product as ProductModel
 from app.db.models import Category as CategoryModel
-from app.schemas.product import Product, ProductInput
+from app.schemas.product import Product, ProductInput, ProductOutput
 
 
 class ProductUseCases:
@@ -49,3 +49,19 @@ class ProductUseCases:
 
         self.db_session.delete(product_on_db)
         self.db_session.commit()
+
+    def list_products(self):
+        products_on_db = self.db_session.query(ProductModel).all()
+
+        products = [
+            self._serialize_product(product_on_db)
+            for product_on_db in products_on_db
+        ]
+
+        return products
+
+    def _serialize_product(self, product_on_db: ProductModel):
+        product_dict = product_on_db.__dict__
+        product_dict['category'] = product_on_db.category.__dict__
+
+        return ProductOutput(**product_dict)

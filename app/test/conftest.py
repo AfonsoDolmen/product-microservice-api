@@ -67,3 +67,40 @@ def product_on_db(db_session):
     db_session.delete(product)
     db_session.delete(category)
     db_session.commit()
+
+
+@pytest.fixture()
+def products_on_db(db_session):
+    """
+    Cria algumas categorias para teste
+    """
+    category = CategoryModel(name='Roupa', slug='roupa')
+    db_session.add(category)
+    db_session.commit()
+
+    products = [
+        ProductModel(name='Camisa Nike', slug='camisa-nike',
+                     price=100.0, stock=10, category_id=category.id),
+        ProductModel(name='Moletom Nike', slug='moletom-nike',
+                     price=100.0, stock=10, category_id=category.id),
+        ProductModel(name='Camiseta Nike', slug='camiseta-nike',
+                     price=100.0, stock=10, category_id=category.id),
+        ProductModel(name='Short Nike', slug='short-nike',
+                     price=100.0, stock=10, category_id=category.id),
+    ]
+
+    for product in products:
+        db_session.add(product)
+
+    db_session.commit()
+
+    for product in products:
+        db_session.refresh(product)
+
+    yield products
+
+    for product in products:
+        db_session.delete(product)
+
+    db_session.delete(category)
+    db_session.commit()
