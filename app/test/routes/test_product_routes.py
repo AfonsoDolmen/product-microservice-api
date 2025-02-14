@@ -37,7 +37,7 @@ def test_add_product_route(db_session: Session, categories_on_db: List[CategoryM
 
 def test_add_product_route_invalid_category_slug(db_session: Session):
     """
-    Testa a rota de add product
+    Teste na validação do slug
     """
     body = {
         'category_slug': 'invalid',
@@ -51,7 +51,7 @@ def test_add_product_route_invalid_category_slug(db_session: Session):
 
     response = client.post('/product/add', json=body)
 
-    assert response.status_code == status.HTTP_404_CREATED
+    assert response.status_code == status.HTTP_404_NOT_FOUND
 
     products_on_db = db_session.query(ProductModel).all()
 

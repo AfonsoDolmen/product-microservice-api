@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from app.routes.category_routes import router as categories_routes
+from app.routes.product_routes import router as products_routes
 
 
 app = FastAPI()
 app.include_router(categories_routes)
+app.include_router(products_routes)
 
 
 @app.get('/health-check')
