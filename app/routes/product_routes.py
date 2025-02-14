@@ -51,7 +51,10 @@ def delete_product(
 
 
 @router.get('/list')
-def list_products(db_session: Session = Depends(get_db_session)):
+def list_products(
+    search: str = '',
+    db_session: Session = Depends(get_db_session)
+):
     uc = ProductUseCases(db_session=db_session)
 
-    return uc.list_products()
+    return uc.list_products(search=search)
