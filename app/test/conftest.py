@@ -81,11 +81,11 @@ def products_on_db(db_session):
     products = [
         ProductModel(name='Camisa Nike', slug='camisa-nike',
                      price=100.0, stock=10, category_id=category.id),
-        ProductModel(name='Moletom Nike', slug='moletom-nike',
+        ProductModel(name='Moletom Nike', slug='moletom',
                      price=100.0, stock=10, category_id=category.id),
-        ProductModel(name='Camiseta Nike', slug='camiseta-nike',
+        ProductModel(name='Camiseta', slug='camiseta-nike',
                      price=100.0, stock=10, category_id=category.id),
-        ProductModel(name='Short Nike', slug='short-nike',
+        ProductModel(name='Short', slug='short',
                      price=100.0, stock=10, category_id=category.id),
     ]
 
