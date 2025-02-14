@@ -10,7 +10,28 @@ class ProductUseCases:
     def __init__(self, db_session: Session):
         self.db_session = db_session
 
+    def list_products(self, search: str = ''):
+        """
+        Lista todos os registros
+        """
+        products_on_db = self.db_session.query(ProductModel).filter(
+            or_(
+                ProductModel.name.ilike(f'%{search}%'),
+                ProductModel.slug.ilike(f'%{search}%')
+            )
+        ).all()
+
+        products = [
+            self._serialize_product(product_on_db)
+            for product_on_db in products_on_db
+        ]
+
+        return products
+
     def add_product(self, product: ProductInput, category_slug: str):
+        """
+        Adiciona um novo registro
+        """
         category = self.db_session.query(CategoryModel).filter_by(
             slug=category_slug).first()
 
@@ -25,6 +46,9 @@ class ProductUseCases:
         self.db_session.commit()
 
     def update_product(self, id: int, product: Product):
+        """
+        Atualiza um registro
+        """
         product_on_db = self.db_session.query(
             ProductModel).filter_by(id=id).first()
 
@@ -41,6 +65,9 @@ class ProductUseCases:
         self.db_session.commit()
 
     def delete_product(self, id: int):
+        """
+        Deleta um registro
+        """
         product_on_db = self.db_session.query(
             ProductModel).filter_by(id=id).first()
 
@@ -51,22 +78,10 @@ class ProductUseCases:
         self.db_session.delete(product_on_db)
         self.db_session.commit()
 
-    def list_products(self, search: str = ''):
-        products_on_db = self.db_session.query(ProductModel).filter(
-            or_(
-                ProductModel.name.ilike(f'%{search}%'),
-                ProductModel.slug.ilike(f'%{search}%')
-            )
-        ).all()
-
-        products = [
-            self._serialize_product(product_on_db)
-            for product_on_db in products_on_db
-        ]
-
-        return products
-
     def _serialize_product(self, product_on_db: ProductModel):
+        """
+        Serializa a saída para o usuário
+        """
         product_dict = product_on_db.__dict__
         product_dict['category'] = product_on_db.category.__dict__
 

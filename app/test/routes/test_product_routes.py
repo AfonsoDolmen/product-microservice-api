@@ -24,7 +24,7 @@ def test_add_product_route(db_session: Session, categories_on_db: List[CategoryM
         },
     }
 
-    response = client.post('/product/add', json=body)
+    response = client.post('/api/v1/product/add', json=body)
 
     assert response.status_code == status.HTTP_201_CREATED
 
@@ -50,7 +50,7 @@ def test_add_product_route_invalid_category_slug(db_session: Session):
         },
     }
 
-    response = client.post('/product/add', json=body)
+    response = client.post('/api/v1/product/add', json=body)
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -60,6 +60,9 @@ def test_add_product_route_invalid_category_slug(db_session: Session):
 
 
 def test_update_product_route(db_session: Session, product_on_db):
+    """
+    Testa a rota para atualizar um registro
+    """
     body = {
         'name': 'Updated Camisa',
         'slug': 'updated-camisa',
@@ -67,7 +70,8 @@ def test_update_product_route(db_session: Session, product_on_db):
         'stock': 20
     }
 
-    response = client.put(f'/product/update/{product_on_db.id}', json=body)
+    response = client.put(
+        f'/api/v1/product/update/{product_on_db.id}', json=body)
 
     assert response.status_code == status.HTTP_200_OK
 
@@ -80,6 +84,9 @@ def test_update_product_route(db_session: Session, product_on_db):
 
 
 def test_update_product_route_invalid_id():
+    """
+    Testa a rota com um id inválido
+    """
     body = {
         'name': 'Updated Camisa',
         'slug': 'updated-camisa',
@@ -87,13 +94,16 @@ def test_update_product_route_invalid_id():
         'stock': 20
     }
 
-    response = client.put('/product/update/1', json=body)
+    response = client.put('/api/v1/product/update/1', json=body)
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 def test_delete_product_route(db_session, product_on_db):
-    response = client.delete(f'/product/delete/{product_on_db.id}')
+    """
+    Testa a rota para a deleção de um registro
+    """
+    response = client.delete(f'/api/v1/product/delete/{product_on_db.id}')
 
     assert response.status_code == status.HTTP_200_OK
 
@@ -103,13 +113,19 @@ def test_delete_product_route(db_session, product_on_db):
 
 
 def test_delete_product_route_invalid_id():
-    response = client.delete('/product/delete/1')
+    """
+    Testa a rota de deleção com um id inválido
+    """
+    response = client.delete('/api/v1/product/delete/1')
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 def test_list_product_route(db_session, products_on_db):
-    response = client.get('/product/list')
+    """
+    Testa a rota para listagem dos registros
+    """
+    response = client.get('/api/v1/product/list')
 
     assert response.status_code == status.HTTP_200_OK
 
@@ -130,7 +146,10 @@ def test_list_product_route(db_session, products_on_db):
 
 
 def test_list_product_route_with_search(products_on_db):
-    response = client.get('/product/list?search=nike')
+    """
+    Testa a rota para listagem dos registros com filtro
+    """
+    response = client.get('/api/v1/product/list?search=nike')
 
     assert response.status_code == status.HTTP_200_OK
 

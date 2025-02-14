@@ -9,26 +9,29 @@ class CategoryUseCases:
     def __init__(self, db_session: Session):
         self.db_session = db_session
 
+    def list_categories(self):
+        """
+        Lista todos os registros
+        """
+        categories_on_db = self.db_session.query(CategoryModel).all()
+        categories_output = [self._serialize_category(
+            category_model) for category_model in categories_on_db]
+
+        return categories_output
+
     def add_category(self, category: Category):
         """
-        Adiciona um novo registro no banco
+        Adiciona um novo registro
         """
         category_model = CategoryModel(**category.dict())
 
         self.db_session.add(category_model)
         self.db_session.commit()
 
-    def list_categories(self):
-        """
-        Lista todos os registros do banco
-        """
-        categories_on_db = self.db_session.query(CategoryModel).all()
-        categories_output = [self.serialize_category(
-            category_model) for category_model in categories_on_db]
-
-        return categories_output
-
     def delete_category(self, id: int):
+        """
+        Deleta um registro do banco
+        """
         category_model = self.db_session.query(
             CategoryModel).filter_by(id=id).first()
 
@@ -39,7 +42,7 @@ class CategoryUseCases:
         self.db_session.delete(category_model)
         self.db_session.commit()
 
-    def serialize_category(self, category_model: CategoryModel):
+    def _serialize_category(self, category_model: CategoryModel):
         """
         Serializa a saída para o usuário
         """

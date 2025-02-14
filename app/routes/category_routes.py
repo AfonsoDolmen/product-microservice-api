@@ -5,14 +5,27 @@ from fastapi import (
     status
 )
 from sqlalchemy.orm import Session
-from app.schemas.category import Category
+from typing import List
+from app.schemas.category import Category, CategoryOutput
 from app.routes.deps import get_db_session
 from app.use_cases.category import CategoryUseCases
 
-router = APIRouter(prefix='/category', tags=['Category'])
+router = APIRouter(prefix='/category', tags=['Categorias'])
 
 
-@router.post('/add', status_code=status.HTTP_201_CREATED)
+@router.get('/list', status_code=status.HTTP_200_OK, description='Lista todas as categorias', response_model=List[CategoryOutput])
+def list_categories(
+    db_session: Session = Depends(get_db_session)
+):
+    """
+    Rota para listar as categorias
+    """
+    uc = CategoryUseCases(db_session)
+
+    return uc.list_categories()
+
+
+@router.post('/add', status_code=status.HTTP_201_CREATED, description='Adiciona nova categoria')
 def add_category(
     category: Category,
     db_session: Session = Depends(get_db_session),
@@ -26,21 +39,15 @@ def add_category(
     return category
 
 
-@router.get('/list', status_code=status.HTTP_200_OK)
-def list_categories(
-    db_session: Session = Depends(get_db_session)
-):
-    uc = CategoryUseCases(db_session)
-
-    return uc.list_categories()
-
-
-@router.delete('/delete/{id}')
+@router.delete('/delete/{id}', status_code=status.HTTP_204_NO_CONTENT, description='Deleta uma categoria')
 def delete_category(
     id: int,
     db_session: Session = Depends(get_db_session)
 ):
+    """
+    Rota para deletar uma categoria
+    """
     uc = CategoryUseCases(db_session=db_session)
     uc.delete_category(id)
 
-    return Response(status_code=status.HTTP_200_OK)
+    return Response(status_code=status.HTTP_204_OK)

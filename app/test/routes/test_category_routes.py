@@ -7,29 +7,11 @@ from app.main import app
 client = TestClient(app)
 
 
-def test_add_category_route(db_session: Session):
-    """
-    Testa a rota de add category
-    """
-    body = {
-        'name': 'Roupa',
-        'slug': 'roupa',
-    }
-
-    response = client.post('/category/add', json=body)
-
-    assert response.status_code == status.HTTP_201_CREATED
-
-    categories_on_db = db_session.query(CategoryModel).all()
-
-    assert len(categories_on_db) == 1
-
-    db_session.delete(categories_on_db[0])
-    db_session.commit()
-
-
 def test_list_categories_route(categories_on_db):
-    response = client.get('/category/list')
+    """
+    Testa a rota para listar categorias
+    """
+    response = client.get('/api/v1/category/list')
 
     assert response.status_code == status.HTTP_200_OK
 
@@ -43,12 +25,36 @@ def test_list_categories_route(categories_on_db):
     }
 
 
+def test_add_category_route(db_session: Session):
+    """
+    Testa a rota de add category
+    """
+    body = {
+        'name': 'Roupa',
+        'slug': 'roupa',
+    }
+
+    response = client.post('/api/v1/category/add', json=body)
+
+    assert response.status_code == status.HTTP_201_CREATED
+
+    categories_on_db = db_session.query(CategoryModel).all()
+
+    assert len(categories_on_db) == 1
+
+    db_session.delete(categories_on_db[0])
+    db_session.commit()
+
+
 def test_delete_category(db_session: Session):
+    """
+    Testa a rota para deleção de uma categoria
+    """
     category_model = CategoryModel(name='Roupa', slug='roupa')
     db_session.add(category_model)
     db_session.commit()
 
-    response = client.delete(f'/category/delete/{category_model.id}')
+    response = client.delete(f'/api/v1/category/delete/{category_model.id}')
 
     assert response.status_code == status.HTTP_200_OK
 

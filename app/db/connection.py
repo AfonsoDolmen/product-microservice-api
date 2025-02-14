@@ -2,7 +2,6 @@ from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-
 DB_URL = getenv('DB_URL')
 
 # Criando nossa engine e sessão do banco

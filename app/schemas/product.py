@@ -22,6 +22,9 @@ class Product(CustomBaseModel):
 
     @validator('price')
     def validate_price(cls, value):
+        """
+        Valida o preço do produto
+        """
         if value <= 0:
             raise ValueError('Invalid price')
 

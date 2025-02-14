@@ -15,6 +15,9 @@ class Category(Base):
 
 
 class Product(Base):
+    """
+    Cria a tabela de produtos no banco de dados
+    """
     __tablename__ = 'products'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     name = Column('name', String, nullable=False)

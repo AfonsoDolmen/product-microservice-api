@@ -65,6 +65,9 @@ def test_product_schema_price():
 
 
 def test_product_input_schema():
+    """
+    Testa o schema de input
+    """
     product = Product(
         name='Camisa Nike',
         slug='camisa-nike',
@@ -89,6 +92,9 @@ def test_product_input_schema():
 
 
 def test_product_output_schema():
+    """
+    Testa o schema de output
+    """
     category = Category(name='Roupa', slug='roupa')
 
     product_output = ProductOutput(
