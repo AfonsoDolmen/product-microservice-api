@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from app.db.models import Product as ProductModel
 from app.db.models import Category as CategoryModel
-from app.schemas.product import ProductInput
+from app.schemas.product import Product, ProductInput
 
 
 class ProductUseCases:
@@ -21,4 +21,20 @@ class ProductUseCases:
         product_model.category_id = category.id
 
         self.db_session.add(product_model)
+        self.db_session.commit()
+
+    def update_product(self, id: int, product: Product):
+        product_on_db = self.db_session.query(
+            ProductModel).filter_by(id=id).first()
+
+        if product_on_db is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail='Product not found')
+
+        product_on_db.name = product.name
+        product_on_db.slug = product.slug
+        product_on_db.price = product.price
+        product_on_db.stock = product.stock
+
+        self.db_session.add(product_on_db)
         self.db_session.commit()
