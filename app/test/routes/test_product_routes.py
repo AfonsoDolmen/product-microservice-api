@@ -106,3 +106,24 @@ def test_delete_product_route_invalid_id():
     response = client.delete('/product/delete/1')
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+def test_list_product_route(db_session, products_on_db):
+    response = client.get('/product/list')
+
+    assert response.status_code == status.HTTP_200_OK
+
+    data = response.json()
+
+    assert len(data) == 4
+    assert data[0] == {
+        'id': products_on_db[0].id,
+        'name': products_on_db[0].name,
+        'slug': products_on_db[0].slug,
+        'price': products_on_db[0].price,
+        'stock': products_on_db[0].stock,
+        'category': {
+            'name': products_on_db[0].category.name,
+            'slug': products_on_db[0].category.slug,
+        },
+    }
