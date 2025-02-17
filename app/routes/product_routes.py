@@ -36,15 +36,15 @@ def add_product(
     """
     uc = ProductUseCases(db_session=db_session)
 
-    uc.add_product(
-        product=product_input,
+    response = uc.add_product(
+        product=product_input.product,
         category_slug=product_input.category_slug
     )
 
-    return Response(status_code=status.HTTP_201_CREATED)
+    return response
 
 
-@router.put('/update/{id}', status_code=status.HTTP_200_OK, description='Atualiza um produto.')
+@router.put('/update/{id}', status_code=status.HTTP_200_OK, description='Atualiza um produto.', response_model=ProductOutput)
 def update_product(
     id: int,
     product: Product,
@@ -54,9 +54,9 @@ def update_product(
     Rota para atualizar um produto
     """
     uc = ProductUseCases(db_session=db_session)
-    uc.update_product(id=id, product=product)
+    response = uc.update_product(id=id, product=product)
 
-    return Response(status_code=status.HTTP_200_OK)
+    return response
 
 
 @router.delete('/delete/{id}', status_code=status.HTTP_204_NO_CONTENT, description='Deleta um produto.')

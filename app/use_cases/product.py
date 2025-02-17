@@ -32,8 +32,8 @@ class ProductUseCases:
         """
         Adiciona um novo registro
         """
-        category = self.db_session.query(CategoryModel).filter_by(
-            slug=category_slug).first()
+        category = self.db_session.query(CategoryModel).filter(
+            CategoryModel.slug == category_slug).first()
 
         if not category:
             raise HTTPException(
@@ -44,6 +44,8 @@ class ProductUseCases:
 
         self.db_session.add(product_model)
         self.db_session.commit()
+
+        return self._serialize_product(product_model)
 
     def update_product(self, id: int, product: Product):
         """
@@ -63,6 +65,8 @@ class ProductUseCases:
 
         self.db_session.add(product_on_db)
         self.db_session.commit()
+
+        return self._serialize_product(product_on_db)
 
     def delete_product(self, id: int):
         """

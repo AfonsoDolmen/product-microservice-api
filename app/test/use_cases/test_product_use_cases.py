@@ -62,7 +62,7 @@ def test_update_product(db_session: Session, product_on_db):
     assert product_on_db.stock == product.stock
 
 
-def test_update_product_invalid_id(db_session, product_on_db):
+def test_update_product_invalid_id(db_session):
     product = Product(
         name='Camisa Nike',
         slug='camisa-nike',
