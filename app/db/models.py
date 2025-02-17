@@ -29,3 +29,13 @@ class Product(Base):
     category_id = Column('category_id', ForeignKey(
         'categories.id'), nullable=False)
     category = relationship('Category', back_populates='products')
+
+
+class User(Base):
+    """
+    Cria a tabela de usuários no banco de dados
+    """
+    __tablename__ = 'users'
+    id = Column('id', Integer, primary_key=True, autoincrement=True)
+    username = Column('username', String, nullable=False, unique=True)
+    password = Column('password', String, nullable=False)
