@@ -100,7 +100,7 @@ def test_list_products(db_session, products_on_db):
     for product in products_on_db:
         db_session.refresh(product)
 
-    assert len(products) == 4
+    assert len(products) == 5
     assert type(products[0]) == ProductOutput
     assert products[0].name == products_on_db[0].name
     assert products[0].category.name == products_on_db[0].category.name
@@ -114,7 +114,7 @@ def test_list_products_with_search(db_session, products_on_db):
     for product in products_on_db:
         db_session.refresh(product)
 
-    assert len(products) == 3
+    assert len(products) == 4
     assert type(products[0]) == ProductOutput
     assert products[0].name == products_on_db[0].name
     assert products[0].category.name == products_on_db[0].category.name

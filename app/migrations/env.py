@@ -12,7 +12,8 @@ from app.db.models import Base
 config = context.config
 
 # Configurando nossa variável de ambiente de forma dinâmica
-DB_URL = getenv('DB_URL')
+TEST_MODE = bool(getenv('TEST_MODE'))
+DB_URL = getenv('DB_URL') if TEST_MODE is False else getenv('DB_TEST_URL')
 config.set_main_option('sqlalchemy.url', DB_URL)
 
 # Interpret the config file for Python logging.

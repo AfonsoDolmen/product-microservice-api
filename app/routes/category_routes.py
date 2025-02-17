@@ -50,4 +50,4 @@ def delete_category(
     uc = CategoryUseCases(db_session=db_session)
     uc.delete_category(id)
 
-    return Response(status_code=status.HTTP_204_OK)
+    return Response(status_code=status.HTTP_200_OK)

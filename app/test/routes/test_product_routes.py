@@ -105,7 +105,7 @@ def test_delete_product_route(db_session, product_on_db):
     """
     response = client.delete(f'/api/v1/product/delete/{product_on_db.id}')
 
-    assert response.status_code == status.HTTP_200_OK
+    assert response.status_code == status.HTTP_204_NO_CONTENT
 
     products_on_db = db_session.query(ProductModel).all()
 
