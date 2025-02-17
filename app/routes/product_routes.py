@@ -26,7 +26,7 @@ def list_products(
     return uc.list_products(search=search)
 
 
-@router.post('/add', status_code=status.HTTP_201_CREATED, description='Adiciona um novo produto.')
+@router.post('/add', status_code=status.HTTP_201_CREATED, description='Adiciona um novo produto.', response_model=ProductOutput)
 def add_product(
     product_input: ProductInput,
     db_session: Session = Depends(get_db_session)

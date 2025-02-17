@@ -28,6 +28,8 @@ class CategoryUseCases:
         self.db_session.add(category_model)
         self.db_session.commit()
 
+        return self._serialize_category(category_model)
+
     def delete_category(self, id: int):
         """
         Deleta um registro do banco
@@ -46,4 +48,8 @@ class CategoryUseCases:
         """
         Serializa a saída para o usuário
         """
-        return CategoryOutput(**category_model.__dict__)
+        return CategoryOutput(
+            name=category_model.name,
+            slug=category_model.slug,
+            id=category_model.id
+        )

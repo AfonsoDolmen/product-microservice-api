@@ -25,7 +25,7 @@ def list_categories(
     return uc.list_categories()
 
 
-@router.post('/add', status_code=status.HTTP_201_CREATED, description='Adiciona nova categoria')
+@router.post('/add', status_code=status.HTTP_201_CREATED, description='Adiciona nova categoria', response_model=CategoryOutput)
 def add_category(
     category: Category,
     db_session: Session = Depends(get_db_session),
@@ -34,9 +34,9 @@ def add_category(
     Rota para criar uma nova categoria
     """
     uc = CategoryUseCases(db_session)
-    uc.add_category(category)
+    response = uc.add_category(category)
 
-    return category
+    return response
 
 
 @router.delete('/delete/{id}', status_code=status.HTTP_204_NO_CONTENT, description='Deleta uma categoria')
