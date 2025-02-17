@@ -1,6 +1,5 @@
 from fastapi.testclient import TestClient
 from fastapi import status
-from app.schemas.user import User
 from app.db.models import User as UserModel
 from app.main import app
 
