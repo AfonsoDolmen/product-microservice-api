@@ -7,7 +7,12 @@ from app.db.models import Product as ProductModel
 from app.db.models import Category as CategoryModel
 from app.main import app
 
+headers = {
+    'Authorization': 'Bearer token',
+}
+
 client = TestClient(app)
+client.headers = headers
 
 
 def test_add_product_route(db_session: Session, categories_on_db: List[CategoryModel]):

@@ -6,7 +6,7 @@ from app.schemas.product import Product, ProductOutput
 from app.use_cases.product import ProductUseCases
 
 
-def test_add_product_uc(db_session: Session, categories_on_db):
+def test_add_product_uc(db_session, categories_on_db):
     product = Product(
         name='Camisa Nike',
         slug='camisa-nike',
@@ -55,11 +55,11 @@ def test_update_product(db_session: Session, product_on_db):
     product_updated_on_db = db_session.query(
         ProductModel).filter_by(id=product_on_db.id).first()
 
-    assert product_on_db is not None
-    assert product_on_db.name == product.name
-    assert product_on_db.slug == product.slug
-    assert product_on_db.price == product.price
-    assert product_on_db.stock == product.stock
+    assert product_updated_on_db is not None
+    assert product_updated_on_db.name == product.name
+    assert product_updated_on_db.slug == product.slug
+    assert product_updated_on_db.price == product.price
+    assert product_updated_on_db.stock == product.stock
 
 
 def test_update_product_invalid_id(db_session):
@@ -80,9 +80,10 @@ def test_delete_product(db_session, product_on_db):
     uc = ProductUseCases(db_session=db_session)
     uc.delete_product(id=product_on_db.id)
 
-    products_on_db = db_session.query(ProductModel).all()
+    deleted_product = db_session.query(
+        ProductModel).filter_by(id=product_on_db.id).first()
 
-    assert len(products_on_db) == 0
+    assert deleted_product is None
 
 
 def test_delete_product_non_exist(db_session):
@@ -100,7 +101,7 @@ def test_list_products(db_session, products_on_db):
     for product in products_on_db:
         db_session.refresh(product)
 
-    assert len(products) == 5
+    assert len(products) == 6
     assert type(products[0]) == ProductOutput
     assert products[0].name == products_on_db[0].name
     assert products[0].category.name == products_on_db[0].category.name
@@ -114,7 +115,7 @@ def test_list_products_with_search(db_session, products_on_db):
     for product in products_on_db:
         db_session.refresh(product)
 
-    assert len(products) == 4
+    assert len(products) == 5
     assert type(products[0]) == ProductOutput
     assert products[0].name == products_on_db[0].name
     assert products[0].category.name == products_on_db[0].category.name

@@ -6,11 +6,12 @@ from fastapi import (
 )
 from sqlalchemy.orm import Session
 from typing import List
-from app.routes.deps import get_db_session
+from app.routes.deps import get_db_session, auth
 from app.use_cases.product import ProductUseCases
 from app.schemas.product import Product, ProductInput, ProductOutput
 
-router = APIRouter(prefix='/product', tags=['Produtos'])
+router = APIRouter(prefix='/product',
+                   tags=['Produtos'], dependencies=[Depends(auth)])
 
 
 @router.get('/list', status_code=status.HTTP_200_OK, description='Lista todos os produtos', response_model=List[ProductOutput])

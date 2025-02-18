@@ -7,10 +7,11 @@ from fastapi import (
 from sqlalchemy.orm import Session
 from typing import List
 from app.schemas.category import Category, CategoryOutput
-from app.routes.deps import get_db_session
+from app.routes.deps import get_db_session, auth
 from app.use_cases.category import CategoryUseCases
 
-router = APIRouter(prefix='/category', tags=['Categorias'])
+router = APIRouter(prefix='/category',
+                   tags=['Categorias'], dependencies=[Depends(auth)])
 
 
 @router.get('/list', status_code=status.HTTP_200_OK, description='Lista todas as categorias', response_model=List[CategoryOutput])

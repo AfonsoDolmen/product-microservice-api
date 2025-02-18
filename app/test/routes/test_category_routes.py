@@ -4,7 +4,12 @@ from sqlalchemy.orm import Session
 from app.db.models import Category as CategoryModel
 from app.main import app
 
+headers = {
+    'Authorization': 'Bearer token',
+}
+
 client = TestClient(app)
+client.headers = headers
 
 
 def test_list_categories_route(categories_on_db):
