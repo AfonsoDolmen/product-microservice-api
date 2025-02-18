@@ -42,7 +42,8 @@ class UserUseCases:
         """
         Verifica se o usuário existe no banco e gera token de acesso
         """
-        user_on_db = self.db_session.query(UserModel).first()
+        user_on_db = self.db_session.query(UserModel).filter(
+            UserModel.username == user.username).first()
 
         if user_on_db is None:
             raise HTTPException(
