@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from passlib.context import CryptContext
 from fastapi import HTTPException, status
-from jose import jwt
+from jose import jwt, JWTError
 from datetime import datetime, timedelta
 from os import getenv
 from app.schemas.user import User
@@ -65,3 +65,20 @@ class UserUseCases:
                                expires_at=expires_at)
 
         return token_data
+
+    def verify_token(self, token: str):
+        """
+        Verifica o token
+        """
+        try:
+            data = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        except JWTError:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid token')
+
+        user_on_db = self.db_session.query(
+            UserModel).filter_by(username=data['sub']).first()
+
+        if user_on_db is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid token')
