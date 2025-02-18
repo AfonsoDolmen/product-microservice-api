@@ -2,7 +2,7 @@ from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-TEST_MODE = bool(getenv('TEST_MODE'))
+TEST_MODE = bool(int(getenv('TEST_MODE')))
 DB_URL = getenv('DB_URL') if TEST_MODE is False else getenv('DB_TEST_URL')
 
 # Criando nossa engine e sessão do banco

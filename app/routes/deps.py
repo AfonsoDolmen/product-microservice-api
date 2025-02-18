@@ -7,7 +7,7 @@ from app.use_cases.user import UserUseCases
 
 oauth_scheme = OAuth2PasswordBearer(tokenUrl='api/v1/user/login')
 
-TEST_MODE = bool(getenv('TEST_MODE'))
+TEST_MODE = bool(int(getenv('TEST_MODE')))
 
 
 def get_db_session():
