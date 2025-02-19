@@ -1,6 +1,7 @@
 import pytest
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
+from fastapi_pagination import Page
 from app.db.models import Product as ProductModel
 from app.schemas.product import Product, ProductOutput
 from app.use_cases.product import ProductUseCases
@@ -96,26 +97,25 @@ def test_delete_product_non_exist(db_session):
 def test_list_products(db_session, products_on_db):
     uc = ProductUseCases(db_session=db_session)
 
-    products = uc.list_products()
+    page = uc.list_products(page=1, size=4)
 
-    for product in products_on_db:
-        db_session.refresh(product)
+    assert type(page) == Page
+    assert len(page.items) == 4
 
-    assert len(products) == 6
-    assert type(products[0]) == ProductOutput
-    assert products[0].name == products_on_db[0].name
-    assert products[0].category.name == products_on_db[0].category.name
+    assert page.items[0].name == products_on_db[0].name
+    assert page.items[0].slug == products_on_db[0].slug
+    assert page.items[0].price == products_on_db[0].price
+    assert page.items[0].stock == products_on_db[0].stock
+
+    assert page.total == 4
+    assert page.page == 1
+    assert page.size == 4
+    assert page.pages == 1
 
 
 def test_list_products_with_search(db_session, products_on_db):
     uc = ProductUseCases(db_session=db_session)
 
-    products = uc.list_products(search='nike')
+    page = uc.list_products(search='nike')
 
-    for product in products_on_db:
-        db_session.refresh(product)
-
-    assert len(products) == 5
-    assert type(products[0]) == ProductOutput
-    assert products[0].name == products_on_db[0].name
-    assert products[0].category.name == products_on_db[0].category.name
+    assert type(page) == Page

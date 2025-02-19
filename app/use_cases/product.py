@@ -1,6 +1,8 @@
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
+from fastapi_pagination import Params
+from fastapi_pagination.ext.sqlalchemy import paginate
 from app.db.models import Product as ProductModel
 from app.db.models import Category as CategoryModel
 from app.schemas.product import Product, ProductInput, ProductOutput
@@ -10,7 +12,7 @@ class ProductUseCases:
     def __init__(self, db_session: Session):
         self.db_session = db_session
 
-    def list_products(self, search: str = ''):
+    def list_products(self, search: str = '', page: int = 1, size: int = 10):
         """
         Lista todos os registros
         """
@@ -19,14 +21,16 @@ class ProductUseCases:
                 ProductModel.name.ilike(f'%{search}%'),
                 ProductModel.slug.ilike(f'%{search}%')
             )
-        ).all()
+        )
 
-        products = [
-            self._serialize_product(product_on_db)
-            for product_on_db in products_on_db
-        ]
+        # products = [
+        #     self._serialize_product(product_on_db)
+        #     for product_on_db in products_on_db
+        # ]
 
-        return products
+        params = Params(page=page, size=size)
+
+        return paginate(products_on_db, params=params)
 
     def add_product(self, product: ProductInput, category_slug: str):
         """
