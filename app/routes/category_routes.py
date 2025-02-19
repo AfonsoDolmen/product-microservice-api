@@ -19,7 +19,7 @@ router = APIRouter(prefix='/category',
 def list_categories(
     db_session: Session = Depends(get_db_session),
     page: int = Query(1, ge=1, description='Páginal atual'),
-    size: int = Query(10, ge=10, description='Quantidade de itens')
+    size: int = Query(10, ge=1, description='Quantidade de itens')
 ):
     """
     Rota para listar as categorias
