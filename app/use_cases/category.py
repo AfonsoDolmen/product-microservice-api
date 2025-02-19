@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from fastapi import status
 from fastapi import HTTPException
+from fastapi_pagination import Params
+from fastapi_pagination.ext.sqlalchemy import paginate
 from app.db.models import Category as CategoryModel
 from app.schemas.category import Category, CategoryOutput
 
@@ -9,15 +11,15 @@ class CategoryUseCases:
     def __init__(self, db_session: Session):
         self.db_session = db_session
 
-    def list_categories(self):
+    def list_categories(self, page: int = 1, size: int = 10):
         """
         Lista todos os registros
         """
-        categories_on_db = self.db_session.query(CategoryModel).all()
-        categories_output = [self._serialize_category(
-            category_model) for category_model in categories_on_db]
+        categories_on_db = self.db_session.query(CategoryModel)
 
-        return categories_output
+        params = Params(page=page, size=size)
+
+        return paginate(categories_on_db, params=params)
 
     def add_category(self, category: Category):
         """

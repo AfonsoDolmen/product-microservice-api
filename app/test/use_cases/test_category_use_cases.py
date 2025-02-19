@@ -2,6 +2,7 @@ import pytest
 from sqlalchemy.orm import Session
 from typing import List
 from fastapi import HTTPException
+from fastapi_pagination import Page
 from app.use_cases.category import CategoryUseCases
 from app.db.models import Category as CategoryModel
 from app.schemas.category import Category, CategoryOutput
@@ -30,22 +31,23 @@ def test_add_category_uc(db_session: Session):
     db_session.commit()
 
 
-def test_list_categories(db_session: Session, categories_on_db: List[Category]):
+def test_list_categories_uc(db_session: Session):
     """
-    Testando ao listar todos os registros do banco
+    Testando ao listar todos os registros do banco com paginação
     """
     uc = CategoryUseCases(db_session)
 
-    categories = uc.list_categories()
+    page = uc.list_categories(page=1, size=2)
 
-    assert len(categories) == 4
-    assert type(categories[0]) == CategoryOutput
-    assert categories[0].id == categories_on_db[0].id
-    assert categories[0].name == categories_on_db[0].name
-    assert categories[0].slug == categories_on_db[0].slug
+    assert type(page) == Page
+    assert len(page.items) == 2
+    assert page.total == 2
+    assert page.page == 1
+    assert page.size == 2
+    assert page.pages == 1
 
 
-def test_delete_category(db_session: Session):
+def test_delete_category_uc(db_session: Session):
     """
     Testando ao deletar um registro
     """
