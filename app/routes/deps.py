@@ -5,7 +5,7 @@ from os import getenv
 from app.db.connection import Session as DBSession
 from app.use_cases.user import UserUseCases
 
-oauth_scheme = OAuth2PasswordBearer(tokenUrl='/user/login')
+oauth_scheme = OAuth2PasswordBearer(tokenUrl='/user/login/')
 
 TEST_MODE = bool(int(getenv('TEST_MODE')))
 

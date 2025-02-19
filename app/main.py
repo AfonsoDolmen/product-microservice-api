@@ -13,7 +13,7 @@ app = FastAPI(
 # Rotas
 app.include_router(categories_routes, prefix='/api/v1')
 app.include_router(products_routes, prefix='/api/v1')
-app.include_router(user_router, prefix='/api/v1')
+app.include_router(user_router)
 
 
 @app.get('/health-check', status_code=status.HTTP_200_OK, description='Status da API', tags=['Health Check'])
