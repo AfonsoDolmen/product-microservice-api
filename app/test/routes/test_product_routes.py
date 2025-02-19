@@ -126,18 +126,19 @@ def test_delete_product_route_invalid_id():
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
-def test_list_product_route(db_session, products_on_db):
+def test_list_product_route(products_on_db):
     """
     Testa a rota para listagem dos registros
     """
-    response = client.get('/api/v1/product/list')
+    response = client.get('/api/v1/product/list?page=1&size=10')
 
     assert response.status_code == status.HTTP_200_OK
 
     data = response.json()
 
-    assert len(data) == 4
-    assert data[0] == {
+    assert 'items' in data
+    assert len(data['items']) == 4
+    assert data['items'][0] == {
         'id': products_on_db[0].id,
         'name': products_on_db[0].name,
         'slug': products_on_db[0].slug,
@@ -160,8 +161,9 @@ def test_list_product_route_with_search(products_on_db):
 
     data = response.json()
 
-    assert len(data) == 3
-    assert data[0] == {
+    assert 'items' in data
+    assert len(data['items']) == 3
+    assert data['items'][0] == {
         'id': products_on_db[0].id,
         'name': products_on_db[0].name,
         'slug': products_on_db[0].slug,

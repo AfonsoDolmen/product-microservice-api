@@ -1,9 +1,11 @@
 from fastapi import (
     APIRouter,
+    Query,
     Response,
     Depends,
     status
 )
+from fastapi_pagination import Page, add_pagination
 from sqlalchemy.orm import Session
 from typing import List
 from app.routes.deps import get_db_session, auth
@@ -14,9 +16,11 @@ router = APIRouter(prefix='/product',
                    tags=['Produtos'], dependencies=[Depends(auth)])
 
 
-@router.get('/list', status_code=status.HTTP_200_OK, description='Lista todos os produtos', response_model=List[ProductOutput])
+@router.get('/list', status_code=status.HTTP_200_OK, description='Lista todos os produtos', response_model=Page[ProductOutput])
 def list_products(
     search: str = '',
+    page: int = Query(1, ge=1, description='Página atual'),
+    size: int = Query(10, ge=1, description='Quantidade de itens'),
     db_session: Session = Depends(get_db_session)
 ):
     """
@@ -24,7 +28,7 @@ def list_products(
     """
     uc = ProductUseCases(db_session=db_session)
 
-    return uc.list_products(search=search)
+    return uc.list_products(search=search, page=page, size=size)
 
 
 @router.post('/add', status_code=status.HTTP_201_CREATED, description='Adiciona um novo produto.', response_model=ProductOutput)
@@ -72,3 +76,6 @@ def delete_product(
     uc.delete_product(id=id)
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+add_pagination(router)

@@ -18,7 +18,7 @@ router = APIRouter(prefix='/category',
 @router.get('/list', status_code=status.HTTP_200_OK, description='Lista todas as categorias', response_model=Page[CategoryOutput])
 def list_categories(
     db_session: Session = Depends(get_db_session),
-    page: int = Query(1, ge=1, description='Numero da página'),
+    page: int = Query(1, ge=1, description='Páginal atual'),
     size: int = Query(10, ge=10, description='Quantidade de itens')
 ):
     """
