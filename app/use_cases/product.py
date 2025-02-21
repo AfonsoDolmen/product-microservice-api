@@ -23,11 +23,6 @@ class ProductUseCases:
             )
         )
 
-        # products = [
-        #     self._serialize_product(product_on_db)
-        #     for product_on_db in products_on_db
-        # ]
-
         params = Params(page=page, size=size)
 
         return paginate(products_on_db, params=params)

@@ -7,7 +7,43 @@ from app.schemas.product import Product, ProductOutput
 from app.use_cases.product import ProductUseCases
 
 
-def test_add_product_uc(db_session, categories_on_db):
+def test_list_products(db_session, products_on_db):
+    """
+    Teste ao listar produtos
+    """
+    uc = ProductUseCases(db_session=db_session)
+
+    page = uc.list_products(page=1, size=4)
+
+    assert type(page) == Page
+    assert len(page.items) == 4
+
+    assert page.items[0].name == products_on_db[0].name
+    assert page.items[0].slug == products_on_db[0].slug
+    assert page.items[0].price == products_on_db[0].price
+    assert page.items[0].stock == products_on_db[0].stock
+
+    assert page.total == 4
+    assert page.page == 1
+    assert page.size == 4
+    assert page.pages == 1
+
+
+def test_list_products_with_search(db_session):
+    """
+    Teste ao listar produtos com filtro de pesquisa
+    """
+    uc = ProductUseCases(db_session=db_session)
+
+    page = uc.list_products(search='nike')
+
+    assert type(page) == Page
+
+
+def test_add_product(db_session, categories_on_db):
+    """
+    Teste ao adicioanar produto
+    """
     product = Product(
         name='Camisa Nike',
         slug='camisa-nike',
@@ -29,6 +65,9 @@ def test_add_product_uc(db_session, categories_on_db):
 
 
 def test_add_product_uc_invalid_category(db_session: Session):
+    """
+    Teste ao listar produto com categoria inválida
+    """
     product = Product(
         name='Camisa Nike',
         slug='camisa-nike',
@@ -43,6 +82,9 @@ def test_add_product_uc_invalid_category(db_session: Session):
 
 
 def test_update_product(db_session: Session, product_on_db):
+    """
+    Teste ao atulizar produto
+    """
     product = Product(
         name='Camisa Nike',
         slug='camisa-nike',
@@ -64,6 +106,9 @@ def test_update_product(db_session: Session, product_on_db):
 
 
 def test_update_product_invalid_id(db_session):
+    """
+    Teste ao atualizar produto com id inválido
+    """
     product = Product(
         name='Camisa Nike',
         slug='camisa-nike',
@@ -78,6 +123,9 @@ def test_update_product_invalid_id(db_session):
 
 
 def test_delete_product(db_session, product_on_db):
+    """
+    Teste ao deletar produto
+    """
     uc = ProductUseCases(db_session=db_session)
     uc.delete_product(id=product_on_db.id)
 
@@ -88,34 +136,10 @@ def test_delete_product(db_session, product_on_db):
 
 
 def test_delete_product_non_exist(db_session):
+    """
+    Teste ao deletar produto não existente no banco
+    """
     uc = ProductUseCases(db_session=db_session)
 
     with pytest.raises(HTTPException):
         uc.delete_product(id=1)
-
-
-def test_list_products(db_session, products_on_db):
-    uc = ProductUseCases(db_session=db_session)
-
-    page = uc.list_products(page=1, size=4)
-
-    assert type(page) == Page
-    assert len(page.items) == 4
-
-    assert page.items[0].name == products_on_db[0].name
-    assert page.items[0].slug == products_on_db[0].slug
-    assert page.items[0].price == products_on_db[0].price
-    assert page.items[0].stock == products_on_db[0].stock
-
-    assert page.total == 4
-    assert page.page == 1
-    assert page.size == 4
-    assert page.pages == 1
-
-
-def test_list_products_with_search(db_session, products_on_db):
-    uc = ProductUseCases(db_session=db_session)
-
-    page = uc.list_products(search='nike')
-
-    assert type(page) == Page
